@@ -11,9 +11,6 @@ on:
         type: string
         required: true
 
-env:
-  IMG: acrpullci.azurecr.io/msi-acrpull:latest
-
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -25,16 +22,13 @@ jobs:
       id: get_metadata
       run: |
         if [ "${{ github.event_name }}" == "push" ]; then
-          echo "IMG_TAG=${{ github.ref }}" >> $env.GITHUB_OUTPUT
+          echo "IMG_TAG=${{ github.ref }}" >> $GITHUB_ENV
         else
-          echo "IMG_TAG=${{ github.event.inputs.releaseTag }}" >> $env.GITHUB_OUTPUT
+          echo "IMG_TAG=${{ github.event.inputs.releaseTag }}" >> $GITHUB_ENV
         fi
-        echo "IMG=acrpullci.azurecr.io/msi-acrpull:${IMG_TAG}" >> $env.GITHUB_OUTPUT
+        echo "IMG=acrpullci.azurecr.io/msi-acrpull:${IMG_TAG}" >> $GITHUB_ENV
         echo "${IMG_TAG}"
         echo "${IMG}"
-    outputs:
-      IMG_TAG: ${{ steps.get_metadata.outputs.IMG_TAG }}
-      IMG: ${{ steps.get_metadata.outputs.IMG }}
 
   release:
     runs-on: ubuntu-latest
@@ -44,8 +38,8 @@ jobs:
       uses: actions/checkout@v4
     - name: verify output
       run: |
-        echo "tag: ${{ needs.setup.outputs.IMG_TAG }}"
-        echo "image ${{ needs.setup.outputs.IMG }}"
+        echo "tag: ${IMG_TAG}"
+        echo "image ${IMG}"
 
   publish:
     runs-on: ubuntu-latest
