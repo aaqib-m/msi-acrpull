@@ -39,10 +39,14 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v4
-    - name: verify output
-      run: |
-        echo "tag: ${{ needs.setup.outputs.IMG_TAG }}"
-        echo "image ${{ needs.setup.outputs.IMG }}"
+    - name: Create release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ needs.setup.outputs.IMG_TAG }}
+        release_name: Release ${{ needs.setup.outputs.IMG_TAG }}
+        draft: true
 
   publish:
     runs-on: ubuntu-latest
