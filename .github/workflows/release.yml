@@ -1,11 +1,12 @@
-name: Docker Image CI
+name: Release and Publish
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+  workflow_dispatch:
+    inputs:
+      releaseTag:
+        description: "Release tag to publish"
+        type: string
+        
 env:
   IMG: acrpullci.azurecr.io/msi-acrpull:latest
 
