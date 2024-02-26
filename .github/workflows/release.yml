@@ -22,7 +22,7 @@ jobs:
       id: get_metadata
       run: |
         if [ "${{ github.event_name }}" == "push" ]; then
-          IMG_TAG="v0"
+          IMG_TAG="${{ github.ref }}"
         else
           IMG_TAG=${{ github.event.inputs.releaseTag }}
         fi
@@ -60,7 +60,7 @@ jobs:
     - name: Build the Docker image
       run: make docker-build
 
-    - name: Check vulnerabilities
+    - name: Run vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: ${{ env.IMG }}
